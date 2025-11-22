@@ -1,0 +1,183 @@
+【緊急】404エラー完全解決手順 - 最終版
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+現在の問題
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HTTPステータス 404 - 見つかりません
+要求されたリソース [/UdemyKamedaJSPServlet/Exercise501_1] は利用できません。
+
+原因: Exercise501_1.class がコンパイルされていない
+
+現在の状態:
+- build/classes/example/ には Exercise501_3.class しかない
+- Exercise501_1.class, Exercise501_2.class, Exercise501_4.class が存在しない
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+解決方法（最も確実）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【ステップ1】Eclipseでプロジェクトを完全にクリーン&ビルド
+
+1. Package Explorerで「UdemyKamedaJSPServlet」を選択
+
+2. メニュー: 「Project」→「Clean...」
+   - 「UdemyKamedaJSPServlet」にチェックを入れる
+   - 「Clean」ボタンをクリック
+   - 完了するまで待つ
+
+3. 自動ビルドが有効になっていることを確認
+   - メニュー: 「Project」→「Build Automatically」
+   - チェックが入っていることを確認
+   - 入っていない場合は、クリックして有効化
+
+4. プロジェクトをリフレッシュ
+   - プロジェクトを右クリック → 「Refresh」 (F5)
+
+5. 手動でビルド
+   - プロジェクトを右クリック → 「Build Project」
+   - または、メニュー: 「Project」→「Build Project」
+
+【ステップ2】ビルド結果を確認（重要！）
+
+1. Package Explorerで以下のパスを展開：
+   ```
+   UdemyKamedaJSPServlet
+   └─ build
+       └─ classes
+           └─ example
+               ├─ Exercise501_1.class  ← これが存在するか確認
+               ├─ Exercise501_2.class
+               ├─ Exercise501_3.class
+               └─ Exercise501_4.class
+   ```
+
+2. すべての4つのクラスファイルが存在することを確認
+
+   もし存在しない場合:
+   a. 「Project」→「Build Automatically」を無効化
+   b. 再度「Build Automatically」を有効化
+   c. プロジェクトを右クリック → 「Build Project」を再度実行
+
+【ステップ3】Tomcatサーバーを完全にクリーン
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+
+2. 「Clean...」をクリック
+
+3. 「Clean Tomcat Work Directory...」をクリック
+
+4. 「OK」をクリック
+
+【ステップ4】Tomcatサーバーを停止
+
+1. サーバーが起動中の場合:
+   - Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+   - 「Stop」をクリック
+   - 完全に停止するまで待つ（灰色のアイコンになる）
+
+【ステップ5】Tomcatサーバーを起動
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Start」をクリック
+3. コンソールビューで起動ログを確認
+
+【ステップ6】ブラウザでアクセス
+
+正常に起動したら、以下のURLでアクセス：
+
+http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+それでも404エラーが出る場合
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【方法1】ビルドエラーを確認
+
+1. Eclipse下部の「Problems」ビューを開く
+   - ウィンドウ → ビューを表示 → Problems
+
+2. エラーが表示されているか確認：
+   - コンパイルエラー
+   - クラスパスエラー
+   - インポートエラー
+
+3. エラーを修正してから、再度ビルド
+
+【方法2】サーバーランタイム環境を確認
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Properties」をクリック
+3. 「Runtime Environment」タブを確認
+4. 「Tomcat11 (Java25)」が選択されていることを確認
+5. 「Apply and Close」をクリック
+
+【方法3】プロジェクトをサーバーから削除して再追加
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を展開
+2. その下に「UdemyKamedaJSPServlet」がある場合：
+   - 右クリック → 「Remove」
+
+3. プロジェクトを再追加：
+   - Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+   - 「Add and Remove...」をクリック
+   - 左側から「UdemyKamedaJSPServlet」を選択
+   - 「Add >」ボタンをクリック
+   - 「Finish」をクリック
+
+4. サーバーを起動
+
+【方法4】Eclipseを完全に再起動
+
+1. Eclipseを完全に終了
+2. 再度起動
+3. プロジェクトを開く
+4. 上記のステップ1-6を再度実行
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+確認コマンド（ターミナル）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ビルドが成功したか確認：
+
+ターミナルで以下を実行：
+
+```bash
+cd "/Applications/Eclipse_2025-09.app/Contents/workspace/UdemyKamedaJSPServlet"
+ls -la build/classes/example/
+```
+
+以下のように表示されれば成功：
+
+```
+total 24
+drwxr-xr-x  3 user  admin    96 Nov 22 11:45 .
+drwxr-xr-x  3 user  admin    96 Nov 22 11:45 ..
+-rw-r--r--  1 user  admin  1870 Nov 22 11:45 Exercise501_1.class
+-rw-r--r--  1 user  admin  1401 Nov 22 11:45 Exercise501_2.class
+-rw-r--r--  1 user  admin  1646 Nov 22 11:45 Exercise501_3.class
+-rw-r--r--  1 user  admin  1471 Nov 22 11:45 Exercise501_4.class
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+重要なポイント
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ すべての4つのクラスファイルがコンパイルされる必要がある
+✅ ビルドが成功することを確認してからサーバーを起動
+✅ Tomcatをクリーンすることで古いキャッシュを削除
+✅ プロジェクトをリフレッシュすることで最新の状態を反映
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+まとめ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+最も重要なステップ：
+
+1. ✅ Eclipseでプロジェクトをクリーン&ビルド
+2. ✅ build/classes/example/ に4つのクラスファイルが存在することを確認
+3. ✅ Tomcatサーバーをクリーン
+4. ✅ サーバーを再起動
+
+これで404エラーは解決するはずです！🎉
+

@@ -1,0 +1,201 @@
+【最終版】Tomcat起動エラー完全解決手順
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+エラー内容
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+エラー: メイン・クラスorg.apache.catalina.startup.Bootstrapを検出およびロードできませんでした
+原因: java.lang.ClassNotFoundException: org.apache.catalina.startup.Bootstrap
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ 修正完了
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+サーバー設定ファイルを修正しました：
+
+変更前:
+runtime-id="Apache Tomcat v11.0 (13)"
+→ パス: /Users/michaeltateatsu/Downloads/apache-tomcat-11.0.13/apache-tomcat-11.0.4
+
+変更後:
+runtime-id="Tomcat11 (Java25)"
+→ パス: /Applications/Eclipse_2025-09.app/Contents/tomcat/11
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【必須】次のステップ（この順番で実行）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【ステップ1】Eclipseでプロジェクトをリフレッシュ
+
+1. Package Explorerで「UdemyKamedaJSPServlet」を選択
+2. 右クリック → 「Refresh」をクリック（または F5 キー）
+3. プロジェクトが再読み込みされるまで待つ
+
+【ステップ2】Serversビューを更新
+
+方法A（推奨）:
+1. Serversビューで「localhost の Tomcat11 (Java25)」を選択
+2. 右クリック → 「Properties」をクリック
+3. 「Runtime Environment」タブを確認
+4. 「Tomcat11 (Java25)」が選択されていることを確認
+5. 選択されていない場合は、「Tomcat11 (Java25)」を選択
+6. 「Apply and Close」をクリック
+
+方法B:
+1. Serversビューを一度閉じる
+2. メニュー: 「Window」→「Show View」→「Other...」
+3. 「Server」→「Servers」を選択
+4. 「Open」をクリック
+5. Serversビューが再表示される
+
+【ステップ3】Tomcatサーバーを完全にクリーン
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Clean...」をクリック
+3. 「Clean Tomcat Work Directory...」をクリック
+4. 「Clean Tomcat Installed Folder...」がある場合、それもクリック
+5. 「OK」をクリック
+
+【ステップ4】Tomcatサーバーを停止（起動中の場合）
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を確認
+2. サーバーが起動している場合（緑色のアイコン）、右クリック → 「Stop」
+3. 完全に停止するまで待つ（灰色のアイコンになる）
+
+【ステップ5】Tomcatサーバーを起動
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Start」をクリック
+3. 起動ログをコンソールビューで確認
+
+【ステップ6】起動ログを確認
+
+コンソールビューで以下のメッセージが表示されることを確認：
+
+✅ 正常な起動:
+   ```
+   情報: Server startup in [XXX] milliseconds
+   ```
+
+❌ エラーが出ないこと:
+   ```
+   エラー: メイン・クラスorg.apache.catalina.startup.Bootstrapを検出およびロードできませんでした
+   ```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+それでもエラーが出る場合
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【方法1】Eclipseを完全に再起動
+
+1. Eclipseを完全に終了
+   - メニュー: 「Eclipse」→「Quit Eclipse」 (macOS)
+   - または、「File」→「Exit」 (Windows/Linux)
+
+2. 再度Eclipseを起動
+
+3. プロジェクトを開く
+
+4. 上記のステップ1-6を再度実行
+
+【方法2】サーバーランタイム環境を再確認
+
+1. メニュー: 「Window」→「Preferences」
+2. 左メニュー: 「Server」→「Runtime Environments」
+3. リストから「Tomcat11 (Java25)」を選択
+4. 「Edit...」をクリック
+5. 「Tomcat installation directory」が以下になっていることを確認:
+   ```
+   /Applications/Eclipse_2025-09.app/Contents/tomcat/11
+   ```
+6. 「JRE」で「Java 21」または「Java 25」が選択されていることを確認
+7. 「Finish」→「Apply and Close」
+
+【方法3】サーバーを完全に再作成
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Delete」をクリック
+3. 「Delete server contents」にチェックを入れる
+4. 「OK」をクリック
+
+5. Serversビューを右クリック → 「New」→「Server」
+
+6. 「Apache」→「Tomcat v11.0 Server」を選択
+7. 「Next」をクリック
+
+8. 「Server runtime」で「Tomcat11 (Java25)」を選択
+   ※もし表示されない場合は、先に「方法2」でランタイム環境を確認
+
+9. 「JRE」で「Java 21」または「Java 25」を選択
+10. 「Finish」をクリック
+
+11. プロジェクトを追加:
+    - Serversビューで「Tomcat v11.0」を右クリック
+    - 「Add and Remove...」をクリック
+    - 「UdemyKamedaJSPServlet」を選択
+    - 「Add >」ボタンをクリック
+    - 「Finish」をクリック
+
+12. サーバーを起動
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+確認ポイント
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ サーバー設定ファイルが正しく修正されている
+   - runtime-id="Tomcat11 (Java25)"
+
+✅ ランタイム環境のパスが正しい
+   - /Applications/Eclipse_2025-09.app/Contents/tomcat/11
+
+✅ catalina.jarが存在する
+   - /Applications/Eclipse_2025-09.app/Contents/tomcat/11/lib/catalina.jar
+
+✅ JREがJava 17以上に設定されている
+
+✅ EclipseでプロジェクトとServersビューをリフレッシュした
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ターミナルでの確認（オプション）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ターミナルで以下を実行して、正しいTomcatパスを確認：
+
+```bash
+# catalina.jarが存在するか確認
+ls -la "/Applications/Eclipse_2025-09.app/Contents/tomcat/11/lib/catalina.jar"
+
+# Tomcatのbinディレクトリが存在するか確認
+ls -la "/Applications/Eclipse_2025-09.app/Contents/tomcat/11/bin/catalina.sh"
+```
+
+両方のコマンドでファイルが表示されればOKです。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+重要な注意事項
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ サーバー設定ファイルを修正した後、必ず以下を実行してください：
+   1. Eclipseでプロジェクトをリフレッシュ（F5）
+   2. Serversビューを更新
+   3. Tomcatサーバーをクリーン
+   4. サーバーを再起動
+
+⚠️ 設定ファイルを直接編集した場合、Eclipseを再起動するか、
+   リフレッシュしないと変更が反映されないことがあります。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+まとめ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ サーバー設定ファイルを修正しました
+✅ 正しいランタイム環境（Tomcat11 (Java25)）を使用するように設定
+
+次のステップ：
+1. Eclipseでリフレッシュ（F5）
+2. Serversビューのプロパティでランタイム環境を確認
+3. Tomcatサーバーをクリーン
+4. サーバーを起動
+
+これで確実に起動するはずです！🎉
+

@@ -1,0 +1,150 @@
+【重要】Tomcat起動エラー完全解決手順
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+エラー内容
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+エラー: メイン・クラスorg.apache.catalina.startup.Bootstrapを検出およびロードできませんでした
+原因: java.lang.ClassNotFoundException: org.apache.catalina.startup.Bootstrap
+
+現在の状態:
+- サーバーが間違ったTomcatパスを参照している可能性があります
+- 参照先: /Users/michaeltateatsu/Downloads/apache-tomcat-11.0.13
+- 正しいパス: /Applications/Eclipse_2025-09.app/Contents/tomcat/11
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+解決方法（最も確実）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【手順1】Tomcatサーバーを削除
+
+1. Serversビューで「Tomcat v11.0」または「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Delete」をクリック
+3. 「Delete server contents」にチェックを入れる
+4. 「OK」をクリック
+
+【手順2】サーバーランタイム環境を確認
+
+1. メニュー: 「Window」→「Preferences」
+2. 左メニューから「Server」→「Runtime Environments」をクリック
+3. リストで以下を確認：
+   ✅ 「Tomcat11 (Java25)」が存在するか
+   ✅ そのパスが「/Applications/Eclipse_2025-09.app/Contents/tomcat/11」になっているか
+
+   もし存在しない、またはパスが間違っている場合：
+   a. 「Add...」をクリック
+   b. 「Apache」→「Apache Tomcat v11.0」を選択
+   c. 「Next」をクリック
+   d. 「Tomcat installation directory」に以下を入力：
+      /Applications/Eclipse_2025-09.app/Contents/tomcat/11
+   e. 「JRE」で「Java 21」または「Java 17」を選択
+   f. 「Finish」をクリック
+
+4. 「Apply and Close」をクリック
+
+【手順3】サーバーを再作成
+
+1. Serversビューを右クリック
+2. 「New」→「Server」をクリック
+3. 「Apache」→「Tomcat v11.0 Server」を選択
+4. 「Next」をクリック
+
+5. 「Server runtime」で「Tomcat11 (Java25)」を選択
+   （もし表示されない場合は、「Installed JREs」でJava 21を選択）
+
+6. 「Finish」をクリック
+
+【手順4】プロジェクトを追加
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Add and Remove...」をクリック
+3. 左側から「UdemyKamedaJSPServlet」を選択
+4. 「Add >」ボタンをクリック
+5. 「Finish」をクリック
+
+【手順5】サーバーを起動
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Start」をクリック
+3. 起動ログを確認（エラーが出ていないか確認）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+確認すべきポイント
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Tomcatのインストールディレクトリ:
+   /Applications/Eclipse_2025-09.app/Contents/tomcat/11
+
+✅ このディレクトリに以下のファイルが存在することを確認:
+   - lib/catalina.jar
+   - bin/startup.sh (macOS) または bin/startup.bat (Windows)
+   - conf/server.xml
+
+✅ サーバーランタイム環境のパスが正しく設定されている
+
+✅ JREがJava 17以上に設定されている
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+それでも解決しない場合
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【方法A】参照されているパスが存在するか確認
+
+ターミナルで以下を実行：
+
+```
+ls -la /Users/michaeltateatsu/Downloads/apache-tomcat-11.0.13
+```
+
+もし存在する場合、そのディレクトリのlib/catalina.jarを確認：
+
+```
+ls -la /Users/michaeltateatsu/Downloads/apache-tomcat-11.0.13/lib/catalina.jar
+```
+
+存在する場合は、そのパスを使用するか、
+正しいパス（/Applications/Eclipse_2025-09.app/Contents/tomcat/11）に変更してください。
+
+【方法B】Eclipseを完全に再起動
+
+1. Eclipseを完全に終了
+2. 再度起動
+3. 上記の手順1-5を再度実行
+
+【方法C】ワークスペースのメタデータをクリーン
+
+⚠️ これは他の設定もリセットされる可能性があります
+
+1. Eclipseを完全に終了
+2. 以下のディレクトリをバックアップ（必要に応じて）:
+   /Applications/Eclipse_2025-09.app/Contents/workspace/.metadata/.plugins/org.eclipse.wst.server.core
+
+3. そのディレクトリを削除:
+   ```
+   rm -rf "/Applications/Eclipse_2025-09.app/Contents/workspace/.metadata/.plugins/org.eclipse.wst.server.core"
+   ```
+
+4. Eclipseを再起動
+5. サーバーを再作成（手順3-5を参照）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+まとめ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+最も確実な解決方法：
+
+1. ✅ サーバーを削除
+2. ✅ 「Window」→「Preferences」→「Server」→「Runtime Environments」
+   で正しいTomcatパス（/Applications/Eclipse_2025-09.app/Contents/tomcat/11）
+   が設定されていることを確認
+3. ✅ サーバーを再作成（正しいランタイム環境を選択）
+4. ✅ プロジェクトを追加
+5. ✅ サーバーを起動
+
+これで確実に解決するはずです！
+
+重要なポイント：
+- サーバーランタイム環境のパスが正しいことを確認
+- JREがJava 17以上であることを確認
+- サーバーを削除して再作成するのが最も確実
+

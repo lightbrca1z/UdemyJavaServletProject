@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+         https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0"
+         metadata-complete="false">
+    <display-name id="DisplayName_1763779722251">UdemyKamedaJSPServlet</display-name>
+    
+    <!-- 
+    注意: サーブレットマッピングは@WebServletアノテーションで定義されています。
+    web.xmlでの重複定義は削除しました（重複するとエラーになります）。
+    
+    サーブレットのURLパターン（@WebServletアノテーションで定義）:
+    - Exercise501_1 → /Exercise501_1
+    - Exercise501_2 → /Exercise501_2
+    - Exercise501_3 → /Exercise501_3
+    - Exercise501_4 → /Exercise501_4
+    -->
+    
+    <!-- ウェルカムファイルの設定 -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.xhtml</welcome-file>
+    </welcome-file-list>
+    
+    <!-- メタデータ完全性の無効化（アノテーションを有効にする） -->
+</web-app>

@@ -1,0 +1,124 @@
+【緊急】Tomcat起動エラー修正手順
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+エラー内容
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+エラー: メイン・クラスorg.apache.catalina.startup.Bootstrapを検出およびロードできませんでした
+原因: java.lang.ClassNotFoundException: org.apache.catalina.startup.Bootstrap
+
+これは、Tomcatのサーバーランタイムが正しく設定されていないことを示しています。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+解決方法
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【方法1】Tomcatサーバーのランタイム設定を確認・修正（推奨）
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Properties」をクリック
+3. 「Runtime Environment」をクリック
+4. 「Apache Tomcat v11.0」が選択されていることを確認
+5. 選択されていない場合：
+   a. 「Edit...」をクリック
+   b. 「Tomcat installation directory」を確認
+   c. 正しいTomcatのインストールディレクトリを指定
+   d. 「Finish」をクリック
+6. 「Apply and Close」をクリック
+
+【方法2】Tomcatサーバーを再作成
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Delete」をクリック
+3. 「Delete server contents」にチェックを入れる
+4. 「OK」をクリック
+
+5. Serversビューを右クリック
+6. 「New」→「Server」をクリック
+7. 「Apache」→「Tomcat v11.0 Server」を選択
+8. 「Next」をクリック
+
+9. 「Tomcat installation directory」を確認
+   - 正しいTomcatのインストールパスを指定
+   - 例: /Applications/Eclipse_2025-09.app/Contents/tomcat
+   - または、システムにインストールされているTomcatのパス
+
+10. 「JRE」が正しく設定されていることを確認
+    - 「Installed JREs」をクリック
+    - Java 17以上が選択されていることを確認
+
+11. 「Finish」をクリック
+
+12. プロジェクトを追加：
+    - Serversビューで「Tomcat v11.0」を右クリック
+    - 「Add and Remove...」をクリック
+    - 「UdemyKamedaJSPServlet」を選択
+    - 「Add >」をクリック
+    - 「Finish」をクリック
+
+13. サーバーを起動
+
+【方法3】Tomcatのインストールを確認
+
+Tomcatが正しくインストールされているか確認：
+
+ターミナルで以下を実行：
+
+```
+# Tomcatのインストールディレクトリを探す
+find /Applications/Eclipse_2025-09.app -name "catalina.jar" -type f 2>/dev/null
+
+# または、システム全体で探す
+find /usr/local -name "catalina.jar" -type f 2>/dev/null
+find /opt -name "catalina.jar" -type f 2>/dev/null
+```
+
+見つかったパスの親ディレクトリがTomcatのインストールディレクトリです。
+
+例: /path/to/tomcat/lib/catalina.jar が見つかった場合
+    → Tomcatのインストールディレクトリは /path/to/tomcat
+
+【方法4】Eclipseのサーバーランタイム設定を確認
+
+1. メニュー: 「Window」→「Preferences」
+2. 「Server」→「Runtime Environments」をクリック
+3. 「Apache Tomcat v11.0」がリストに表示されているか確認
+4. 表示されていない場合：
+   a. 「Add...」をクリック
+   b. 「Apache」→「Apache Tomcat v11.0」を選択
+   c. 「Next」をクリック
+   d. 「Tomcat installation directory」を指定
+   e. 「Finish」をクリック
+5. 「Apply and Close」をクリック
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+web.xmlの修正（完了済み）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ web.xmlのサーブレット名を修正しました
+   - Example501_1 → Exercise501_1 に変更
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+確認すべきポイント
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ Tomcatのインストールディレクトリが正しく設定されている
+2. ✅ サーバーランタイム環境が正しく設定されている
+3. ✅ JREのバージョンがJava 17以上である
+4. ✅ web.xmlに構文エラーがない（修正済み）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+最も確実な方法
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【推奨手順】
+
+1. Serversビューで「Tomcat v11.0」を削除
+2. 「Window」→「Preferences」→「Server」→「Runtime Environments」
+   でTomcatのランタイムを確認・追加
+3. サーバーを再作成
+4. プロジェクトを追加
+5. サーバーを起動
+
+これで確実に解決するはずです！
+

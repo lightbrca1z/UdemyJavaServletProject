@@ -1,0 +1,105 @@
+【修正完了】Tomcatサーバー起動エラーの修正
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+修正内容
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ サーバー設定ファイルを修正しました
+
+変更前:
+runtime-id="Apache Tomcat v11.0 (9)"
+→ パス: /Users/michaeltateatsu/Downloads/apache-tomcat-11.0.13
+
+変更後:
+runtime-id="Tomcat11 (Java25)"
+→ パス: /Applications/Eclipse_2025-09.app/Contents/tomcat/11
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+次のステップ（重要！）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【ステップ1】Eclipseでプロジェクトをリフレッシュ
+
+1. Package Explorerで「UdemyKamedaJSPServlet」を右クリック
+2. 「Refresh」をクリック（またはF5キー）
+
+【ステップ2】Serversビューをリフレッシュ
+
+1. Serversビューを右クリック
+2. 「Refresh」をクリック
+
+または、Serversビューを一度閉じて再度開く
+
+【ステップ3】Tomcatサーバーを再起動
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Clean...」をクリック
+3. 「Clean Tomcat Work Directory...」をクリック
+4. 「Stop」でサーバーを停止（起動中の場合）
+5. 「Start」でサーバーを起動
+
+【ステップ4】起動ログを確認
+
+Eclipseのコンソールビューで以下を確認：
+
+✅ エラーが表示されないこと
+✅ サーバーが正常に起動すること
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+それでもエラーが出る場合
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【方法1】Eclipseを完全に再起動
+
+1. Eclipseを完全に終了
+2. 再度起動
+3. サーバーを起動
+
+【方法2】サーバー設定を確認
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Properties」をクリック
+3. 「Runtime Environment」で「Tomcat11 (Java25)」が選択されていることを確認
+4. 「Apply and Close」をクリック
+
+【方法3】サーバーを再作成
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を削除
+2. Serversビューを右クリック → 「New」→「Server」
+3. 「Apache」→「Tomcat v11.0 Server」を選択
+4. 「Next」をクリック
+5. 「Server runtime」で「Tomcat11 (Java25)」を選択
+6. 「Finish」をクリック
+7. プロジェクトを追加（Add and Remove...）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+確認ポイント
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ サーバー設定ファイルが修正されている
+✅ 正しいランタイム環境（Tomcat11 (Java25)）が使用される
+✅ Tomcatパス: /Applications/Eclipse_2025-09.app/Contents/tomcat/11
+✅ catalina.jarが存在する: /Applications/Eclipse_2025-09.app/Contents/tomcat/11/lib/catalina.jar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+期待される結果
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+正常に起動すると、コンソールに以下のようなメッセージが表示されます：
+
+```
+情報: Server startup in [XXX] milliseconds
+```
+
+そして、以下のエラーが表示されないこと：
+
+❌ エラー: メイン・クラスorg.apache.catalina.startup.Bootstrapを検出およびロードできませんでした
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+修正が完了しました！
+EclipseでプロジェクトとServersビューをリフレッシュしてから、
+サーバーを再起動してください。
+
+これで正常に起動するはずです！🎉
+

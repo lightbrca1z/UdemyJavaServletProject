@@ -1,0 +1,143 @@
+【修正完了】サーブレットマッピング重複エラー解決
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+エラー内容
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+java.lang.IllegalArgumentException: サーブレット [Exercise501_1] と [example.Exercise501_1] 
+を同じ url-pattern [/Exercise501_1] にマッピングすることはできません。
+
+原因: web.xmlと@WebServletアノテーションの両方で同じURLパターンを定義していたため
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ 修正内容
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+web.xmlからサーブレットマッピングを削除しました。
+
+理由:
+- すべてのサーブレットクラスに@WebServletアノテーションがある
+- アノテーションのみを使用する方がモダンでシンプル
+- web.xmlとアノテーションの重複を避けるため
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+現在のサーブレットマッピング（アノテーションで定義）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Exercise501_1.java
+   @WebServlet("/Exercise501_1")
+   → URL: http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_1
+
+✅ Exercise501_2.java
+   @WebServlet("/Exercise501_2")
+   → URL: http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_2
+
+✅ Exercise501_3.java
+   @WebServlet("/Exercise501_3")
+   → URL: http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_3
+
+✅ Exercise501_4.java
+   @WebServlet("/Exercise501_4")
+   → URL: http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_4
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+次のステップ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【ステップ1】Eclipseでプロジェクトをリフレッシュ
+
+1. Package Explorerで「UdemyKamedaJSPServlet」を右クリック
+2. 「Refresh」をクリック（または F5 キー）
+
+【ステップ2】Tomcatサーバーをクリーン
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Clean...」をクリック
+3. 「Clean Tomcat Work Directory...」をクリック
+4. 「OK」をクリック
+
+【ステップ3】Tomcatサーバーを起動
+
+1. Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+2. 「Start」をクリック
+
+【ステップ4】起動ログを確認
+
+コンソールビューで以下のメッセージが表示されることを確認：
+
+✅ 正常な起動:
+   ```
+   情報: Server startup in [XXX] milliseconds
+   ```
+
+❌ エラーが出ないこと:
+   ```
+   サーブレット [Exercise501_1] と [example.Exercise501_1] を同じ url-pattern にマッピングすることはできません
+   ```
+
+【ステップ5】ブラウザでアクセス
+
+正常に起動したら、以下のURLでアクセス：
+
+http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+修正後のweb.xmlの構造
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+web.xmlから削除したもの:
+- <servlet> 要素
+- <servlet-mapping> 要素
+
+web.xmlに残したもの:
+- <display-name>
+- <welcome-file-list>
+- <metadata-complete>false</metadata-complete>
+  ※これにより、@WebServletアノテーションが有効になります
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+サーブレットマッピングの2つの方法
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【方法1】アノテーション（推奨・現在使用中）
+```java
+@WebServlet("/Exercise501_1")
+public class Exercise501_1 extends HttpServlet {
+    ...
+}
+```
+- メリット: シンプル、コードに近い場所に定義
+- web.xmlでの定義は不要
+
+【方法2】web.xml（削除済み）
+```xml
+<servlet>
+    <servlet-name>Exercise501_1</servlet-name>
+    <servlet-class>example.Exercise501_1</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>Exercise501_1</servlet-name>
+    <url-pattern>/Exercise501_1</url-pattern>
+</servlet-mapping>
+```
+- メリット: 設定を一元管理できる
+- デメリット: コードと設定が離れる
+
+⚠️ 重要: 両方を同時に使用すると重複エラーになります
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+期待される結果
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Tomcatサーバーが正常に起動する
+✅ エラーメッセージが表示されない
+✅ http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_1 にアクセスできる
+✅ ページが正常に表示される
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+修正が完了しました！
+上記の手順でTomcatサーバーを再起動してください。
+
+これで正常に起動するはずです！🎉
+

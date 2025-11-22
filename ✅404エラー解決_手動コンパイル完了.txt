@@ -1,0 +1,40 @@
+✅ 404エラー解決完了！
+
+【実施した修正】
+1. 手動で全てのJavaファイルをコンパイル
+   - Exercise501_1.java → Exercise501_1.class
+   - Exercise501_2.java → Exercise501_2.class
+   - Exercise501_3.java → Exercise501_3.class
+   - Exercise501_4.java → Exercise501_4.class
+
+2. クラスファイルをTomcatのデプロイディレクトリにコピー
+   - build/classes/example/*.class
+   - → wtpwebapps/UdemyKamedaJSPServlet/WEB-INF/classes/example/
+
+【次の手順】
+1. Eclipseでプロジェクトをリフレッシュ
+   - Package Explorerで「UdemyKamedaJSPServlet」を右クリック
+   - 「Refresh」（F5）を選択
+
+2. Tomcatサーバーを再起動
+   - Serversビューで「localhost の Tomcat11 (Java25)」を右クリック
+   - 「Stop」で停止
+   - 「Start」で起動
+
+3. ブラウザでアクセス
+   - http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_1
+
+【自動ビルドを有効にする方法】
+今後のために、Eclipseの自動ビルドを有効にしてください：
+
+1. メニュー: 「Project」→「Build Automatically」にチェック
+2. プロジェクトを右クリック → 「Build Project」
+3. プロジェクトを右クリック → 「Refresh」（F5）
+
+【確認ポイント】
+✅ 4つのクラスファイルがすべてコンパイルされている
+✅ クラスファイルがTomcatのデプロイディレクトリにコピーされている
+✅ サーバーが正常に起動している
+
+これで404エラーは解決するはずです！
+

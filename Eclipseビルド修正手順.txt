@@ -1,0 +1,152 @@
+【緊急】ClassNotFoundException の解決 - Eclipseビルド手順
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+現在の問題
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+エラー: java.lang.ClassNotFoundException: example.Exercise501_1
+
+原因: クラスファイルが存在しない（build/classes/example/ が空）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+即座に実行する手順（3分で完了）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【ステップ1】Eclipseでプロジェクトを選択
+
+1. Package Explorerで「UdemyKamedaJSPServlet」をクリック（選択）
+
+【ステップ2】クリーン実行
+
+1. メニューバーから「Project」をクリック
+2. 「Clean...」をクリック
+3. 「UdemyKamedaJSPServlet」にチェックを入れる
+4. 「Clean」ボタンをクリック
+
+【ステップ3】自動ビルドを確認
+
+1. メニューバーから「Project」をクリック
+2. 「Build Automatically」にチェックが入っていることを確認
+   ✓ チェックが入っていない場合は、クリックして有効化
+
+【ステップ4】プロジェクトをリフレッシュ
+
+1. Package Explorerで「UdemyKamedaJSPServlet」を右クリック
+2. 「Refresh」をクリック（またはF5キーを押す）
+
+【ステップ5】手動ビルド
+
+1. Package Explorerで「UdemyKamedaJSPServlet」を右クリック
+2. 「Build Project」をクリック
+   （または「Project」→「Build Project」）
+
+【ステップ6】ビルド結果を確認
+
+1. Package Explorerで以下のパスを展開：
+   UdemyKamedaJSPServlet
+   └─ build
+       └─ classes
+           └─ example
+               ├─ Exercise501_1.class  ← これが存在するか確認
+               ├─ Exercise501_2.class
+               ├─ Exercise501_3.class
+               └─ Exercise501_4.class
+
+2. これらの.classファイルが存在することを確認
+
+【ステップ7】Tomcatを再起動
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Clean...」をクリック
+3. 「Clean Tomcat Work Directory...」をクリック
+4. 「Stop」でサーバーを停止
+5. 「Start」でサーバーを再起動
+
+【ステップ8】アクセス
+
+ブラウザで以下にアクセス：
+http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ビルドエラーが出る場合の対処
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【エラー1】「jakarta.servlet パッケージが見つからない」
+
+対処方法:
+
+1. プロジェクトを右クリック → 「Properties」
+2. 左メニューから「Java Build Path」をクリック
+3. 「Libraries」タブをクリック
+4. 「Modulepath」または「Classpath」セクションを確認
+5. 「Apache Tomcat v11.0」または「Tomcat 11 (Java25)」が表示されていることを確認
+
+   見つからない場合:
+   a. 「Add Library...」をクリック
+   b. 「Server Runtime」を選択 → Next
+   c. 「Apache Tomcat v11.0」を選択 → Finish
+
+6. 「Apply and Close」をクリック
+7. 再度「Build Project」を実行
+
+【エラー2】「Javaのバージョンが合わない」
+
+対処方法:
+
+1. プロジェクトを右クリック → 「Properties」
+2. 左メニューから「Java Compiler」をクリック
+3. 「Compiler compliance level」が「17」になっていることを確認
+4. 「Enable project specific settings」にチェックが入っていない場合は入れる
+5. 「Apply and Close」をクリック
+6. 再度「Build Project」を実行
+
+【エラー3】「コンパイルエラーが多数表示される」
+
+対処方法:
+
+1. Eclipse下部の「Problems」ビューを確認
+2. エラーメッセージを確認
+3. よくある問題：
+   - インポートエラー → クラスパスの問題
+   - シンタックスエラー → Javaファイルを確認
+   - クラスが見つからない → サーバーランタイムの設定を確認
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+確認コマンド（ターミナルで実行）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ビルドが成功したか確認：
+
+ターミナルで以下を実行：
+
+```
+cd "/Applications/Eclipse_2025-09.app/Contents/workspace/UdemyKamedaJSPServlet"
+ls -la build/classes/example/
+```
+
+以下のように表示されれば成功：
+
+```
+total 24
+drwxr-xr-x  2 user  admin    64 Nov 22 11:30 .
+drwxr-xr-x  3 user  admin    96 Nov 22 11:30 ..
+-rw-r--r--  1 user  admin  1245 Nov 22 11:30 Exercise501_1.class
+-rw-r--r--  1 user  admin  1396 Nov 22 11:30 Exercise501_2.class
+-rw-r--r--  1 user  admin  1641 Nov 22 11:30 Exercise501_3.class
+-rw-r--r--  1 user  admin  1466 Nov 22 11:30 Exercise501_4.class
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+重要事項
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Eclipseでビルドするのが最も確実です
+✅ 自動ビルドが有効になっていることを確認してください
+✅ ビルド後、必ず build/classes/example/ にクラスファイルが
+   作成されていることを確認してください
+✅ クラスファイルが作成されたら、Tomcatを再起動してください
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+この手順を実行すれば、ClassNotFoundException は解決されます！
+

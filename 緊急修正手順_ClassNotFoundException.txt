@@ -1,0 +1,143 @@
+【緊急】ClassNotFoundException の完全解決手順
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+現在の状況
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ クラスファイルは存在しています
+   - build/classes/example/Exercise501_1.class ✓
+   - Tomcatのデプロイディレクトリにも存在 ✓
+   
+❌ しかし、まだ ClassNotFoundException が発生
+
+原因: Tomcatがクラスファイルを見つけられていない可能性
+      （キャッシュの問題、またはデプロイの問題）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+完全解決手順（この順番で実行）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【ステップ1】EclipseでTomcatサーバーを完全にクリーン
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Clean...」をクリック
+3. 「Clean Tomcat Work Directory...」をクリック
+4. 「Clean Tomcat Installed Folder...」がある場合は、それもクリック
+5. 「OK」をクリック
+
+【ステップ2】Tomcatサーバーを停止
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Stop」をクリック
+   （完全に停止するまで待つ）
+
+【ステップ3】プロジェクトをサーバーから削除
+
+1. Serversビューで「Tomcat v11.0」を展開
+2. その下に「UdemyKamedaJSPServlet」がある場合：
+   - 右クリック → 「Remove」
+   - 確認ダイアログで「OK」をクリック
+
+【ステップ4】プロジェクトをクリーン&ビルド
+
+1. Package Explorerで「UdemyKamedaJSPServlet」を選択
+2. メニュー: 「Project」→「Clean...」
+3. 「UdemyKamedaJSPServlet」を選択 → 「Clean」
+4. プロジェクトを右クリック → 「Build Project」
+
+【ステップ5】プロジェクトをサーバーに再追加
+
+1. Package Explorerで「UdemyKamedaJSPServlet」を右クリック
+2. 「Run As」→「Run on Server...」
+3. 「Tomcat v11.0」を選択
+4. 「Finish」をクリック
+
+または、
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Add and Remove...」をクリック
+3. 左側から「UdemyKamedaJSPServlet」を選択
+4. 「Add >」ボタンをクリック
+5. 「Finish」をクリック
+
+【ステップ6】Tomcatサーバーを起動
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Start」をクリック
+3. 起動ログを確認（エラーが出ていないか確認）
+
+【ステップ7】ブラウザでアクセス
+
+http://localhost:8080/UdemyKamedaJSPServlet/Exercise501_1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+それでも解決しない場合
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+【方法A】Eclipseを完全に再起動
+
+1. Eclipseを完全に終了
+2. 再度起動
+3. プロジェクトを開く
+4. 上記のステップ1-7を再度実行
+
+【方法B】手動でデプロイディレクトリを確認
+
+ターミナルで以下を実行：
+
+```
+# デプロイディレクトリのパス
+DEPLOY_DIR="/Applications/Eclipse_2025-09.app/Contents/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/UdemyKamedaJSPServlet"
+
+# クラスファイルを確認
+ls -la "$DEPLOY_DIR/WEB-INF/classes/example/"
+
+# web.xmlを確認
+cat "$DEPLOY_DIR/WEB-INF/web.xml" | grep -A 3 Exercise501_1
+```
+
+期待される結果：
+- Exercise501_1.class が存在する
+- web.xmlにサーブレットマッピングが設定されている
+
+【方法C】サーバーの再作成
+
+1. Serversビューで「Tomcat v11.0」を右クリック
+2. 「Delete」をクリック
+3. 「Delete server contents」にチェックを入れる
+4. 「OK」をクリック
+5. Serversビューを右クリック → 「New」→「Server」
+6. 「Apache」→「Tomcat v11.0 Server」を選択
+7. 「Next」→「Finish」
+8. プロジェクトを再追加（ステップ5参照）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+確認すべきポイント
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ build/classes/example/Exercise501_1.class が存在する
+2. ✅ Tomcatのデプロイディレクトリにクラスファイルがコピーされている
+3. ✅ web.xmlにサーブレットマッピングが設定されている
+4. ✅ Tomcatが正常に起動している
+5. ✅ プロジェクトがサーバーに追加されている
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+最も確実な方法
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Eclipseを完全に終了
+2. 以下を削除（手動で）:
+   - Serversディレクトリの Tomcat 設定
+   - .metadata/.plugins/org.eclipse.wst.server.core/tmp0/
+
+3. Eclipseを再起動
+4. Tomcatサーバーを再作成
+5. プロジェクトを追加して起動
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+最も効果的なのは、ステップ1-7を順番に実行することです。
+特に「プロジェクトをサーバーから削除して再追加」する手順が重要です。
+
+これで確実に解決するはずです！
+
